@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>FlagQuiz – Alta Fidelidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #b0bbbf;
+    color: #fff;
+    padding: 40px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  :root {
+    --vermelho: #d7263d;
+    --azulPetroleo: #114b5f;
+    --laranja: #fcab10;
+    --cinza: #b0bbbf;
+    --lima: #f0f600;
+  }
+
+  .section-title {
+    font-size: .9rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #d7263d;
+    margin-bottom: 12px;
+    text-align: center;
+    text-shadow: #000000;
+    font-weight: bolder;
+  }
+
+  .card {
+    background: #1a1d27;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #2a2d3a;
+  }
+
+  /* ── RF27 – Progresso ── */
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .85rem;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .progress-row strong { color: #fff; }
+  .bar-track {
+    height: 8px;
+    background: #2a2d3a;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, var(--laranja), var(--vermelho));
+    border-radius: 99px;
+  }
+  .flag {
+    width: 100%;
+    height: 140px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #002868 33%, #fff 33% 66%, #BF0A30 66%);
+    margin-bottom: 16px;
+    border: 1px solid #2a2d3a;
+  }
+  .question { font-size: .85rem; color: var(--laranja); margin-bottom: 16px; }
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .opt {
+    background: #22263a;
+    border: 1.5px solid #2a2d3a;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+  }
+  .opt:hover { border-color: var(--cinza); }
+
+  /* ── RF13 – Feedback visual ── */
+  .rf13-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .card.correct { border-color: #22c97a; background: #0f2018; }
+  .card.wrong   { border-color: #f04e4e; background: #20100f; }
+  .feedback-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .correct .feedback-badge { background: #22c97a22; color: #22c97a; }
+  .wrong   .feedback-badge { background: #f04e4e22; color: #f04e4e; }
+  .flag-mini {
+    width: 100%;
+    height: 70px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #002868 33%, #fff 33% 66%, #BF0A30 66%);
+    margin-bottom: 12px;
+    border: 1px solid #2a2d3a;
+  }
+  .opt.mini { padding: 8px; font-size: .75rem; }
+  .opt.green { border-color: #22c97a; color: #22c97a; background: #22c97a18; }
+  .opt.red   { border-color: #f04e4e; color: #f04e4e; background: #f04e4e18; }
+  .opt.dim   { opacity: .4; }
+
+  /* ── RF23 – Fim de jogo ── */
+  .endscreen h2 { color: var(--laranja)}
+  .endscreen { text-align: center; }
+  .trophy { font-size: 3rem; margin-bottom: 8px; }
+  .endscreen h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+  .endscreen .sub { color: #888; font-size: .85rem; margin-bottom: 24px; }
+  .score-box {
+    background: #22263a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .score-box .big { font-size: 2.2rem; font-weight: 700; color: var(--lima); }
+  .score-box .label { font-size: .75rem; color: #888; }
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: #22263a;
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .stat .val { font-size: 1.1rem; font-weight: 700; }
+  .stat .key { font-size: .7rem; color: #888; margin-top: 2px; }
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    flex: 1;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+  .btn.primary { background: #5b7fff; color: #fff; }
+  .btn.secondary { background: #22263a; color: #888; border: 1px solid #2a2d3a; }
+</style>
+</head>
+<body>
+
+<!-- RF27 – Progresso Atual -->
+<div style="width:100%;max-width:400px">
+  <p class="section-title">RF27 – Progresso Atual</p>
+  <div class="card">
+    <div class="progress-row">
+      <span>Questão <strong>5 de 10</strong></span>
+      <span>Países</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill"></div></div>
+    <div class="flag"></div>
+    <p class="question">De qual país é essa bandeira?</p>
+    <div class="options">
+      <button class="opt">Brasil</button>
+      <button class="opt">Argentina</button>
+      <button class="opt">França</button>
+      <button class="opt">Colômbia</button>
+    </div>
+  </div>
+</div>
+
+<!-- RF13 – Indicação Visual -->
+<div style="width:100%;max-width:400px">
+  <p class="section-title">RF13 – Indicação Visual de Acerto / Erro</p>
+  <div class="rf13-grid">
+    <div class="card correct">
+      <span class="feedback-badge">✓ Correto!</span>
+      <div class="flag-mini"></div>
+      <div class="options">
+        <button class="opt mini green">França</button>
+        <button class="opt mini dim">Cuba</button>
+        <button class="opt mini dim">Haiti</button>
+        <button class="opt mini dim">Libéria</button>
+      </div>
+    </div>
+    <div class="card wrong">
+      <span class="feedback-badge">✗ Errado!</span>
+      <div class="flag-mini"></div>
+      <div class="options">
+        <button class="opt mini red">Cuba</button>
+        <button class="opt mini green">França</button>
+        <button class="opt mini dim">Haiti</button>
+        <button class="opt mini dim">Libéria</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RF23 – Fim de Jogo -->
+<div style="width:100%;max-width:400px">
+  <p class="section-title">RF23 – Fim de Jogo</p>
+  <div class="card endscreen">
+    <div class="trophy">🏆</div>
+    <h2>Fim de Jogo!</h2>
+    <p class="sub">Você completou a rodada de Países</p>
+    <div class="score-box">
+      <div class="big">8.450</div>
+      <div class="label">pontos totais</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="val" style="color:#22c97a">8</div><div class="key">Acertos</div></div>
+      <div class="stat"><div class="val" style="color:#f04e4e">2</div><div class="key">Erros</div></div>
+      <div class="stat"><div class="val" style="color:#f5c842">+120</div><div class="key">XP ganho</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary">Jogar Novamente</button>
+      <button class="btn secondary">Início</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
